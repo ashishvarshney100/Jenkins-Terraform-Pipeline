@@ -1,15 +1,9 @@
 pipeline {
     agent any
-    // environment {
-    //     ACCESS_KEY = credentials('AWS_ACCESS_KEY_ID')
-    //     SECRET_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-    // }
     environment {
-        AWS_ACCESS_KEY_ID = "AKIA2D37AOLYNXHRDVOW"
-        AWS_SECRET_ACCESS_KEY = "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"
-                    
+        AWS_ACCESS_KEY_ID     = credentials('access_key_id')
+        AWS_SECRET_ACCESS_KEY = credentials('secret_key_id')
     }
-    
     stages {
         stage ("Azure Repo Cloning") {
             steps {
@@ -19,7 +13,7 @@ pipeline {
         stage ("Terraform Init") {
             steps {
                 dir('/var/lib/jenkins/workspace/Terraform-Tooling-pipelien/terraform') {
-                    sh 'terraform init'
+                    sh "terraform init"
                 }
             }
         }
@@ -32,22 +26,31 @@ pipeline {
                 
             }
         }
-        stage ("Terraform Test") {
-            steps {
-                dir('/var/lib/jenkins/workspace/Terraform-Tooling-pipelien/test') {
-                    sh 'go test main_test.go' 
-                }
-            }
-        }
-        stage ("Terraform Apply") {
-            steps {
+        // stage ("Terraform Test") {
+        //     steps {
+        //         dir('/var/lib/jenkins/workspace/Terraform-Tooling-pipelien/test') {
+        //             sh 'go test main_test.go' 
+        //         }
+        //     }
+        // }
+        // stage ("Terraform Apply") {
+        //     steps {
                 
-                dir('/var/lib/jenkins/workspace/Terraform-Tooling-pipelien/terraform') {
-                    sh 'terraform apply --auto-approve --var-file="/var/lib/jenkins/workspace/Terraform-Tooling-pipelien/env-config/Dev.auto.tfvars"'
-                }
+        //         dir('/var/lib/jenkins/workspace/Terraform-Tooling-pipelien/terraform') {
+        //             sh 'terraform apply --auto-approve --var-file="/var/lib/jenkins/workspace/Terraform-Tooling-pipelien/env-config/Dev.auto.tfvars"'
+        //         }
                 
-            }
-        }
+        //     }
+        // }
+        // stage ("Terraform Destroy") {
+        //     steps {
+                
+        //         dir('/var/lib/jenkins/workspace/Terraform-Tooling-pipelien/terraform') {
+        //             sh 'terraform destroy --auto-approve --var-file="/var/lib/jenkins/workspace/Terraform-Tooling-pipelien/env-config/Dev.auto.tfvars"'
+        //         }
+                
+        //     }
+        // }
     }
 
 }
